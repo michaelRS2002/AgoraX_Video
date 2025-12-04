@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { Request, Response } from 'express';
 import http from 'http';
 import { Server } from 'socket.io';
 import path from 'path';
@@ -16,7 +16,7 @@ app.use(express.static(path.join(__dirname, '../public')));
 
 // Provide ICE config from env via simple endpoint
 // Set STUN_URL (and optionally STUN_USERNAME/STUN_PASSWORD for TURN) in .env
-app.get('/ice.json', (_req, res) => {
+app.get('/ice.json', (_req: Request, res: Response) => {
   const stunUrl = process.env.STUN_URL; // e.g., stun:localhost:3478
   const turnUrl = process.env.TURN_URL; // e.g., turn:localhost:3478
   const turnUser = process.env.TURN_USERNAME;
