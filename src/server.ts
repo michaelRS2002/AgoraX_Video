@@ -15,16 +15,31 @@ const PORT = process.env.PORT || 3000;
 app.use(express.static(path.join(__dirname, '../public')));
 
 // Provide ICE config from env via simple endpoint
-// Set STUN_URL (and optionally STUN_USERNAME/STUN_PASSWORD for TURN) in .env
+// Supports both env vars and hardcoded fallback to Metered TURN servers
 app.get('/ice.json', (_req: Request, res: Response) => {
-  const stunUrl = process.env.STUN_URL; // e.g., stun:localhost:3478
-  const turnUrl = process.env.TURN_URL; // e.g., turn:localhost:3478
+  const stunUrl = process.env.STUN_URL;
+  const turnUrl = process.env.TURN_URL;
   const turnUser = process.env.TURN_USERNAME;
   const turnPass = process.env.TURN_PASSWORD;
 
   const iceServers: any[] = [];
+  
+  // If env vars configured, use them
   if (stunUrl) iceServers.push({ urls: [stunUrl] });
-  if (turnUrl && turnUser && turnPass) iceServers.push({ urls: [turnUrl], username: turnUser, credential: turnPass });
+  if (turnUrl && turnUser && turnPass) {
+    iceServers.push({ urls: [turnUrl], username: turnUser, credential: turnPass });
+  }
+
+  // Fallback: use same Metered TURN servers as frontend
+  if (iceServers.length === 0) {
+    iceServers.push(
+      { urls: "stun:stun.relay.metered.ca:80" },
+      { urls: "turn:global.relay.metered.ca:80", username: "a78e90d33f695bcbf13ee7b9", credential: "+M16OuXBI+HyxP4i" },
+      { urls: "turn:global.relay.metered.ca:80?transport=tcp", username: "a78e90d33f695bcbf13ee7b9", credential: "+M16OuXBI+HyxP4i" },
+      { urls: "turn:global.relay.metered.ca:443", username: "a78e90d33f695bcbf13ee7b9", credential: "+M16OuXBI+HyxP4i" },
+      { urls: "turns:global.relay.metered.ca:443?transport=tcp", username: "a78e90d33f695bcbf13ee7b9", credential: "+M16OuXBI+HyxP4i" }
+    );
+  }
 
   res.json({ iceServers });
 });
