@@ -31,12 +31,28 @@ app.get('/ice.json', (_req: Request, res: Response) => {
 
 io.on('connection', (socket) => {
   socket.on('join', (roomId: string) => {
+    // Notify new peer about existing peers
+    const socketsInRoom = io.sockets.adapter.rooms.get(roomId);
+    if (socketsInRoom) {
+      socketsInRoom.forEach(existingSocketId => {
+        if (existingSocketId !== socket.id) {
+          socket.emit('peer-joined', existingSocketId);
+        }
+      });
+    }
+    
     socket.join(roomId);
+    // Notify existing peers about new peer
     socket.to(roomId).emit('peer-joined', socket.id);
   });
 
   socket.on('signal', ({ roomId, data }: { roomId: string; data: any }) => {
-    socket.to(roomId).emit('signal', { from: socket.id, data });
+    const target = data.to;
+    if (target) {
+      io.to(target).emit('signal', { from: socket.id, data });
+    } else {
+      socket.to(roomId).emit('signal', { from: socket.id, data });
+    }
   });
 
   socket.on('disconnecting', () => {
