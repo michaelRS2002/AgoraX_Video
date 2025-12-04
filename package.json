@@ -1,0 +1,35 @@
+{
+  "name": "agorax_video",
+  "version": "1.0.0",
+  "description": "Plataforma web de videoconferencia básica con WebRTC",
+  "main": "dist/server.js",
+  "scripts": {
+    "build": "tsc && tsc -p tsconfig.client.json",
+    "start": "node dist/server.js",
+    "dev": "nodemon --watch src --ext ts,html,css --exec ts-node src/server.ts",
+    "build:server": "tsc",
+    "build:client": "tsc -p tsconfig.client.json"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/michaelRS2002/AgoraX_Video.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/michaelRS2002/AgoraX_Video/issues"
+  },
+  "homepage": "https://github.com/michaelRS2002/AgoraX_Video#readme",
+  "dependencies": {
+    "dotenv": "^16.6.1",
+    "express": "^5.2.1",
+    "socket.io": "^4.8.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.11",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3"
+  }
+}

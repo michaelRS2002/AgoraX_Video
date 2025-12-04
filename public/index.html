@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AgoraX Video</title>
+  <style>
+    body { font-family: system-ui, sans-serif; margin: 0; padding: 16px; }
+    header { display: flex; gap: 8px; align-items: center; }
+    main { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 12px; }
+    video { width: 100%; border-radius: 8px; background: #000; }
+    .controls { display: flex; gap: 8px; margin-top: 8px; }
+    input[type="text"] { padding: 6px 8px; }
+    button { padding: 8px 12px; }
+  </style>
+</head>
+<body>
+  <header>
+    <input id="roomId" type="text" placeholder="ID de sala" />
+    <button id="joinBtn">Unirse</button>
+    <div class="controls">
+      <button id="toggleCamBtn">Apagar cámara</button>
+    </div>
+  </header>
+  <main>
+    <section>
+      <h3>Mi cámara</h3>
+      <video id="localVideo" autoplay playsinline muted></video>
+    </section>
+    <section>
+      <h3>Remoto</h3>
+      <video id="remoteVideo" autoplay playsinline></video>
+    </section>
+  </main>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
